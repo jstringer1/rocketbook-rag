@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  llama:
+    build: llama
+    container_name: rocketbook-llama
+    ports:
+      - "11434:11434"
+
+  chromadb:
+    image: chromadb/chroma:latest
+    container_name: rocketbook-chromadb
+    ports:
+      - "8000:8000"
+    volumes:
+      - "chroma-data:/chroma/chroma"
+
+volumes:
+  chroma-data:
+
