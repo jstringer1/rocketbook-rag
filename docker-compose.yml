@@ -1,13 +1,13 @@
 version: '3.8'
 
 services:
-  llama:
-    build: llama
-    container_name: rocketbook-llama
+  ollama:
+    build: ollama
+    container_name: rocketbook-ollama
     ports:
       - "11434:11434"
 
-  chromadb:
+  chroma:
     image: chromadb/chroma:latest
     container_name: rocketbook-chromadb
     ports:
@@ -15,6 +15,31 @@ services:
     volumes:
       - "chroma-data:/chroma/chroma"
 
+  ingest:
+    build: ingest
+    container_name: rocketbook-ingest
+    depends_on:
+      - ollama
+      - chroma
+    volumes:
+      - ${GOOGLE_DRIVE_BASE}/rocketbook:/data/process
+      - ${GOOGLE_DRIVE_BASE}/rocketbook_archive:/data/archive
+    environment:
+      - PROCESS_DIR=/data/process
+      - ARCHIVE_DIR=/data/archive
+      - OLLAMA_URL=http://ollama:11434
+      - CHROMA_URL=http://chroma:8000
+    command: tail -f /dev/null
+
+  query:
+    build: query
+    container_name: rocketbook-query
+    depends_on:
+      - ollama
+      - chroma
+    command: tail -f /dev/null
+
 volumes:
   chroma-data:
+  ocr-temp:
 
