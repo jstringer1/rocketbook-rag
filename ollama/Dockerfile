@@ -3,7 +3,8 @@ FROM ollama/ollama:latest AS builder
 RUN ollama serve & \
     OLLAMA_PID=$! && \
     sleep 10 && \
-    ollama pull llama3.1:8b && \
+    ollama pull "llama3.1:8b" && \
+    ollama pull "nomic-embed-text" && \
     kill $OLLAMA_PID
 
 FROM ollama/ollama:latest

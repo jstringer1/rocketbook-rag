@@ -2,10 +2,15 @@ version: '3.8'
 
 services:
   ollama:
+    image: stringerj/rocketbook-ollama:latest
     build: ollama
     container_name: rocketbook-ollama
     ports:
       - "11434:11434"
+    healthcheck:
+        test: ["CMD", "curl", "-f", "http://localhost:11434"]
+        interval: 5s
+        retries: 5
 
   chroma:
     image: chromadb/chroma:latest
@@ -16,6 +21,7 @@ services:
       - "chroma-data:/chroma/chroma"
 
   ingest:
+    image: stringerj/rocketbook-ingest:latest
     build: ingest
     container_name: rocketbook-ingest
     depends_on:
@@ -27,19 +33,25 @@ services:
     environment:
       - PROCESS_DIR=/data/process
       - ARCHIVE_DIR=/data/archive
+      - CHROMA_HOST=chroma
+      - CHROMA_PORT=8000
       - OLLAMA_URL=http://ollama:11434
-      - CHROMA_URL=http://chroma:8000
+      - COLLECTION_NAME=rocketbook_notes
     command: tail -f /dev/null
 
   query:
+    image: stringerj/rocketbook-query:latest
     build: query
     container_name: rocketbook-query
     depends_on:
       - ollama
       - chroma
+    environment:
+      - CHROMA_HOST=chroma
+      - CHROMA_PORT=8000
+      - OLLAMA_URL=http://ollama:11434
+      - COLLECTION_NAME=rocketbook_notes
     command: tail -f /dev/null
 
 volumes:
   chroma-data:
-  ocr-temp:
-

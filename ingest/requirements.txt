@@ -1,0 +1,7 @@
+langchain
+langchain-community
+chromadb
+ollama
+watchdog
+pydrive2
+oauth2client

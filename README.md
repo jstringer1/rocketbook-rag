@@ -21,16 +21,31 @@ RAG over my rocketbook notes.
 
 * Install google drive
 
-```bash
-brew install --cash google-drive
+`
+brew install --cask google-drive
+`
 
 * Login via Google Drive GUI app
 
 * Create rocketbook google drive directories
 
-```bash
+`
 mkdir ~/Google\ Drive/My\ Drive/rocketbook
 mkdir ~/Google\ Drive/My\ Drive/rocketbook_archive
+`
+
+* Setup service account & permissions
+
+    - Log into Google Cloud Console
+    - Select or create a project
+    - In IAM & Admin create a service account
+    - Click on the service account and in keys Create New Key in JSON format
+    - Download the JSON file and save to ingest/credentials.json
+
+* Give service account permissions on google drive folders
+
+    - Open google drive
+    - Share rocketbook and rocketbook_archive folders with service account email address
 
 ### 2. Setup Rocketbook App
 
@@ -40,8 +55,9 @@ mkdir ~/Google\ Drive/My\ Drive/rocketbook_archive
 
 * Alias rocketbook query in ~/.zshrc
 
-```bash
+`
 alias rocketbook='docker exec -it rocketbook-query python query.py'
+`
 
 ## Running
 
@@ -49,6 +65,7 @@ alias rocketbook='docker exec -it rocketbook-query python query.py'
 
 ## Query notes
 
-```bash
+`
 rocketbook "what did I write about the project?"
+`
 
